@@ -29,10 +29,48 @@ public class Question3 {
 				VirtualMachine vm = (VirtualMachine) managedEntity;
 				System.out.println("VM: '" + vm.getName() + "'");
 				VirtualMachineConfigInfo vmInfo = (VirtualMachineConfigInfo) vm.getConfig();
-				System.out.println("-- Config :");
-//				System.out.println("---Fullname : " +vmInfo.guestFullName());
-				System.out.println("---Version : "+ vmInfo.version);
-				System.out.println("---CPU :  "+vmInfo.getHardware().numCPU+" vCPU \n---Memory : " +vmInfo.getHardware().memoryMB +" MB"); 
+				for (VirtualDevice vd : vm.getConfig().getHardware().getDevice()) { 
+  
+			        if (vd instanceof VirtualMachineVideoCard) { 
+			            VirtualMachineVideoCard vVideoCard = (VirtualMachineVideoCard) vd; 
+			        } else if (vd instanceof VirtualMachineVMCIDevice) { 
+			            VirtualMachineVMCIDevice vVMCI = (VirtualMachineVMCIDevice) vd; 
+			        } else if (vd instanceof VirtualSCSIPassthrough) { 
+			            VirtualSCSIPassthrough vSCSI = (VirtualSCSIPassthrough) vd; 
+			        } else if (vd instanceof VirtualDisk) { 
+			            VirtualDisk vDisk = (VirtualDisk) vd; 
+			            VirtualDiskFlatVer2BackingInfo vbi = (VirtualDiskFlatVer2BackingInfo) vd.getBacking(); 
+			        	System.out.println("--VirtualDisk :" + vd);
+			        } else if (vd instanceof VirtualCdrom) { 
+			            VirtualCdrom vCDrom = (VirtualCdrom) vd; 
+			            if (vCDrom.getBacking() instanceof VirtualCdromRemoteAtapiBackingInfo) { 
+			            } else if (vCDrom.getBacking() instanceof VirtualCdromAtapiBackingInfo) { 
+			                 VirtualCdromAtapiBackingInfo vabi = (VirtualCdromAtapiBackingInfo) vCDrom.getBacking(); 
+			            } else if (vCDrom.getBacking() instanceof VirtualCdromIsoBackingInfo) { 
+			                 VirtualCdromIsoBackingInfo vibi = (VirtualCdromIsoBackingInfo) vCDrom.getBacking(); 
+			            } else if (vCDrom.getBacking() instanceof VirtualCdromRemotePassthroughBackingInfo) { 
+			                 VirtualCdromRemotePassthroughBackingInfo vpbi = (VirtualCdromRemotePassthroughBackingInfo) vCDrom.getBacking(); 
+			            } 
+			        } else if (vd instanceof VirtualEthernetCard) { 
+			            VirtualEthernetCard vEth = (VirtualEthernetCard) vd; 
+	 				     if (vEth instanceof VirtualE1000) {  
+	 				         System.out.println("Adapter type: E1000");  
+	 				     } else if (vEth instanceof VirtualE1000E) {  
+	 				         System.out.println("Adapter type: E1000E");  
+	 				     } else if (vEth instanceof VirtualPCNet32) {  
+	 				         System.out.println("Adapter type: PCnet32");  
+	 				     } else if (vEth instanceof VirtualVmxnet) {  
+	 				         System.out.println("Adapter type: Vmxnet");  
+	 				     } else if (vEth instanceof VirtualVmxnet2) {  
+	 				         System.out.println(Adapter type: "Vmxnet2");  
+	 				     } else if (vEth instanceof VirtualVmxnet3) {  
+	 				         System.out.println("Adapter type: Vmxnet3");  
+	 				     }  
+	 				     System.out.println("Connect at power on"+vEth.getConnectable().startConnected);  
+	 				     System.out.println("Manual"+vEth.addressType);  
+	 				     System.out.println("MAC address:"+vEth.macAddress);
+	 				 }
+	 				}
 			}
 			si.getServerConnection().logout();
 		} catch (InvalidProperty e) {
